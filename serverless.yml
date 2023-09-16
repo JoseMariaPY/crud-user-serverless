@@ -4,6 +4,26 @@ provider:
   name: aws
   runtime: nodejs14.x
 
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+
+
+
+custom:
+  serverless-dynamodb:
+  # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+
 functions:
   hello-world:
     handler: handler.hello
@@ -11,3 +31,26 @@ functions:
       - http:
           path: hello
           method: GET
+
+  get-users:
+    handler: getUsers/handler.getUsers
+    events:
+      - http:
+          path: users/{id}
+          method: GET
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

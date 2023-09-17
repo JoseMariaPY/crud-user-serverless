@@ -3,14 +3,28 @@ service: crud-users-serverless
 provider:
   name: aws
   runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action: "dynamodb:*"
+          Resource: "arn:aws:dynamodb:us-east-1:469286914666:table/usersTable"
+
+package: 
+  individually: true
+  patterns:
+    - "!.dynamodb"
+    - "**!node_modules**"
 
 plugins:
   - serverless-dynamodb
   - serverless-offline
-
+  - serverless-dotenv-plugin
 
 
 custom:
+  dotenv:
+    path: .env
   serverless-dynamodb:
   # If you only want to use DynamoDB Local in some stages, declare them here
     stages:
@@ -25,20 +39,18 @@ custom:
       convertEmptyValues: true
 
 functions:
-  hello-world:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: GET
-
-  get-users:
+  getUsers:
     handler: getUsers/handler.getUsers
     events:
       - http:
           path: users/{id}
           method: GET
-
+  createUsers:
+    handler: createUsers/handler.createUsers
+    events:
+      - http:
+          path: users
+          method: POST
 resources:
   Resources:
     usersTable:

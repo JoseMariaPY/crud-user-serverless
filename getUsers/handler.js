@@ -1,17 +1,20 @@
 const aws = require('aws-sdk');
 
+let config = {}
 
-const dynamodb = new aws.DynamoDB.DocumentClient({
-    region: 'localhost',
-    endpoint: 'http://0.0.0.0:8000',
-    accessKeyId: 'MockAccessKeyId',
-    secretAccessKey: 'MockSecretAccessKey',
-  });
+if (process.env.IS_OFFLINE) {
+    config = {
+        region: 'localhost',
+        endpoint: 'http://0.0.0.0:8000',
+        accessKeyId: 'MockAccessKeyId',
+        secretAccessKey: 'MockSecretAccessKey',
+    }
+}
+const dynamodb = new aws.DynamoDB.DocumentClient(config);
 
 //const dynamodb = new aws.DynamoDB.DocumentClient();
 
 const getUsers = async (event, context) => {
-    console.log("event", event)
     let userId = event.pathParameters.id
 
     var params = {

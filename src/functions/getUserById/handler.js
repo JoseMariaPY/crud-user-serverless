@@ -29,7 +29,7 @@ const getUserById = async (event, context) => {
             console.log(res)
             return {
                 "statusCode": 200,
-                "body": JSON.stringify({ 'user': res.Item })
+                "body": JSON.stringify({ 'user': res.Items[0] })
             }
         })
       } catch (error) {

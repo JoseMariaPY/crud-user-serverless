@@ -98,3 +98,5 @@ dynamodb_local_latest.tar.gz
 dynamodb_local_latest.tar.gz.1
 
 venv/
+
+__pycache__/

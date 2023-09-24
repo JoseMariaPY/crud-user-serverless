@@ -15,6 +15,7 @@ package:
   patterns:
     - "!.dynamodb/**"
     - "!node_modules/**"
+    - "!.serverless/**"
     - "!venv/**"
 
 plugins:
@@ -66,6 +67,18 @@ functions:
       - http:
           path: users/{id}
           method: PATCH
+          request:
+            parameters:
+              paths:
+                id: true
+  delete-user:
+    handler: src/functions/deleteUser/handler.delete_user
+    runtime: python3.8
+    timeout: 30
+    events:
+      - http:
+          path: users/{id}
+          method: DELETE
           request:
             parameters:
               paths:

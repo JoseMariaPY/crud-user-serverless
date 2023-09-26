@@ -44,6 +44,10 @@ functions:
       - http:
           path: users/{id}
           method: GET
+          request:
+            parameters:
+              paths:
+                id: true
   get-users:
     handler: src/functions/getAllUsers/handler.get_users
     runtime: python3.8
@@ -59,6 +63,9 @@ functions:
       - http:
           path: users
           method: POST
+          request:
+            schemas:
+              application/json: ${file(src/schema/user-schema.json)}
   update-user:
     handler: src/functions/updateUser/handler.update_user
     runtime: python3.8
@@ -71,6 +78,8 @@ functions:
             parameters:
               paths:
                 id: true
+            schemas:
+              application/json: ${file(src/schema/user-schema.json)}
   delete-user:
     handler: src/functions/deleteUser/handler.delete_user
     runtime: python3.8
